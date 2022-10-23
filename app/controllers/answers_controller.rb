@@ -16,6 +16,18 @@ class AnswersController < ApplicationController
     end
   end
 
+  def destroy
+    @answer = Answer.find(params[:id])
+
+    if @answer.user == current_user
+      @answer.destroy
+      redirect_to @answer.question, notice: 'Your answer successfully deleted.'
+    else
+      flash.now[:alert] = "You don't have enough rights to delete this answer!"
+      render 'questions/show'
+    end
+  end
+
   private
   
   def set_question
@@ -23,7 +35,7 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body).merge(user_id: current_user.id)
   end
 
 end

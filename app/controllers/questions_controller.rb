@@ -16,7 +16,7 @@ class QuestionsController < ApplicationController
   end
 
   def create
-    @question = Question.new(question_params)
+    @question = current_user.questions.new(question_params)
 
     if @question.save
       redirect_to @question, notice: 'Your question successfully created.'
@@ -34,8 +34,13 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    question.destroy
-    redirect_to questions_path
+    if question.user == current_user
+      question.destroy
+      redirect_to questions_path, notice: 'Your question successfully deleted.'
+    else
+      flash.now[:alert] = "You don't have enough rights to delete this question!"
+      render :show
+    end
   end
 
   private

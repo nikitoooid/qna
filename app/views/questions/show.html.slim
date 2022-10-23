@@ -1,11 +1,17 @@
 h1= question.title
 p= question.body
+= link_to('Delete question', question_path(question), method: :delete) if question.user == current_user
+
+- if @answer.errors.present?
+    = render "shared/errors", resource: @answer
 
 = form_with model: [question, @answer] do |f|
 
-  = f.label :body
-  = f.text_area :body
+    = f.label :body, 'Answer the question'
+    = f.text_area :body
 
-  = f.submit 'Answer'
+    = f.submit 'Answer'
+
+h2 Answers
 
 = render question.answers

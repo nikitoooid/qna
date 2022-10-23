@@ -6,14 +6,15 @@ feature 'User can look at the question and its answers', %q{
   I'd like to be able to see the question and it's answers
 } do
 
-  given(:question) { create(:question) }
+  given(:user) { create(:user) }
+  given(:question) { create(:question, user_id: user.id) }
+  given!(:answer) { create(:answer, question_id: question.id, user_id: user.id) }
 
   scenario 'User show the question and its answers' do
-    question.answers.push create(:answer)
-
     visit question_path(question)
-
-    expect(page).to have_content 'Answer text'
+    save_and_open_page
+    expect(page).to have_content question.body
+    expect(page).to have_content answer.body
   end
 
 end

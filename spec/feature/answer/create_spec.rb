@@ -1,16 +1,15 @@
 require 'rails_helper'
 
 feature 'User can create answer to the question', %{
-  In order to help user to find solution
-  As an authenticate user
-  I'd like to be able to create the answer on question page
+  In order to help another user to find a solution
+  As an authenticated user
+  I'd like to be able to create the answer on the question page
 } do
 
-  given(:question) { create(:question) }
+  given(:user) { create(:user) }
+  given(:question) { create(:question, user_id: user.id) }
 
   describe 'Authenticated user' do
-    given(:user) { create(:user) }
-
     background do
       sign_in(user)
 
@@ -18,7 +17,7 @@ feature 'User can create answer to the question', %{
     end
 
     scenario 'answers the question' do
-      fill_in 'Body', with: 'Test answer'
+      fill_in 'Answer the question', with: 'Test answer'
       click_on 'Answer'
 
       expect(page).to have_content 'Your answer successfully created.'
@@ -32,10 +31,13 @@ feature 'User can create answer to the question', %{
     end
   end
 
-  scenario 'Unauthenticate user cant answer the question' do
+  scenario 'Unauthenticate user tries to answer the question' do
     visit question_path(question)
 
-    expect(page).to_not have_content 'Answer'
+    fill_in 'Answer the question', with: 'Test answer'
+    click_on 'Answer'
+
+    expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end
 
 end
