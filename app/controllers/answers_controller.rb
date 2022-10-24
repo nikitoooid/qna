@@ -8,16 +8,17 @@ class AnswersController < ApplicationController
     if @answer.save
       redirect_to question_path(@question), notice: 'Your answer successfully created.'
     else
-      redirect_to question_path(@question), alert: 'Your answer not created!'
+      flash.now[:alert] = "Your answer not created!"
+      render 'questions/show'
     end
   end
 
   def destroy
     @answer = Answer.find(params[:id])
 
-    if @answer.user == current_user
+    if current_user && current_user.author_of?(@answer)
       @answer.destroy
-      redirect_to @answer.question, notice: 'Your answer successfully deleted.'
+      redirect_to question_path(@answer.question), notice: 'Your answer successfully deleted.'
     else
       flash.now[:alert] = "You don't have enough rights to delete this answer!"
       render 'questions/show'

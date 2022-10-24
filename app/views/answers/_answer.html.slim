@@ -1,4 +1,6 @@
 - if answer.persisted?
   div
     p= answer.body
-    = link_to('Delete answer', answer_path(answer), method: :delete) if answer.user == current_user
+
+    - if current_user && current_user.author_of?(answer)
+      = link_to('Delete answer', answer_path(answer), method: :delete)

@@ -31,7 +31,7 @@ feature 'User can create answer to the question', %{
     end
   end
 
-  scenario 'Unauthenticate user tries to answer the question' do
+  scenario 'Unauthenticated user tries to answer the question' do
     visit question_path(question)
 
     fill_in 'Answer the question', with: 'Test answer'

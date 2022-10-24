@@ -12,7 +12,7 @@ feature 'User can look at the question and its answers', %q{
 
   scenario 'User show the question and its answers' do
     visit question_path(question)
-    save_and_open_page
+    
     expect(page).to have_content question.body
     expect(page).to have_content answer.body
   end
