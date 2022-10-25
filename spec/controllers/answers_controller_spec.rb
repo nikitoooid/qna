@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
-  let(:question) { create(:question, user_id: user.id) }
+  let(:question) { create(:question, user: user) }
 
   describe 'POST #create' do
     before { login(user) }
@@ -31,7 +31,7 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let!(:answer) { create(:answer, question_id: question.id, user_id: user.id) }
+    let!(:answer) { create(:answer, question: question, user: user) }
 
     context 'authenticated user' do
       before { login(user) }
@@ -50,12 +50,6 @@ RSpec.describe AnswersController, type: :controller do
     context 'unauthenticated user' do
       it 'not deletes the answer' do
         expect { delete :destroy, params: { id: answer } }.to_not change(Answer, :count)
-      end
-
-      it 'renders question show view' do
-        delete :destroy, params: { id: answer }
-
-        expect(response).to render_template 'questions/show'
       end
     end
   end

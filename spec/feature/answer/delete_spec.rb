@@ -6,12 +6,12 @@ feature 'User can delete the answer', %{
   I'd be able to delete my answer
 } do
   given(:user) { create(:user) }
-  given(:question) { create(:question, user_id: user.id) }
-  given!(:answer) { create(:answer, question_id: question.id, user_id: user.id) }
+  given(:question) { create(:question, user: user) }
+  given!(:answer) { create(:answer, question: question, user: user) }
 
   describe 'Authenticated user' do
     given(:another_user) { create(:user) }
-    given(:another_answer) { create(:answer, question_id: question.id, user_id: another_user.id) }
+    given(:another_answer) { create(:answer, question: question, user: another_user) }
 
     background do
       sign_in(user)

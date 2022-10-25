@@ -7,8 +7,8 @@ feature 'User can look at the question and its answers', %q{
 } do
 
   given(:user) { create(:user) }
-  given(:question) { create(:question, user_id: user.id) }
-  given!(:answer) { create(:answer, question_id: question.id, user_id: user.id) }
+  given(:question) { create(:question, user: user) }
+  given!(:answer) { create(:answer, question: question, user: user) }
 
   scenario 'User show the question and its answers' do
     visit question_path(question)

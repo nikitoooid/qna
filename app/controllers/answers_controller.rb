@@ -1,9 +1,10 @@
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, only: [:create]
+  before_action :authenticate_user!
   before_action :set_question, only: [:create]
 
   def create
     @answer = @question.answers.new(answer_params)
+    current_user.answers.push @answer
 
     if @answer.save
       redirect_to question_path(@question), notice: 'Your answer successfully created.'
@@ -16,11 +17,11 @@ class AnswersController < ApplicationController
   def destroy
     @answer = Answer.find(params[:id])
 
-    if current_user && current_user.author_of?(@answer)
+    if current_user.author_of?(@answer)
       @answer.destroy
       redirect_to question_path(@answer.question), notice: 'Your answer successfully deleted.'
     else
-      flash.now[:alert] = "You don't have enough rights to delete this answer!"
+      flash.now[:alert] = "You don't have enough permissions to delete this answer!"
       render 'questions/show'
     end
   end
@@ -32,7 +33,7 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body).merge(user_id: current_user.id)
+    params.require(:answer).permit(:body)
   end
 
 end

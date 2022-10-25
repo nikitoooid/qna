@@ -6,12 +6,12 @@ feature 'User can delete the question', %{
   I'd be able to delete my question
 } do
   given(:user) { create(:user) }
-  given(:question) { create(:question, user_id: user.id) }
+  given(:question) { create(:question, user: user) }
 
 
   describe 'Authenticated user' do
     given(:another_user) { create(:user) }
-    given(:another_question) { create(:question, user_id: another_user.id) }
+    given(:another_question) { create(:question, user: another_user) }
     
     background { sign_in(user) }
 
